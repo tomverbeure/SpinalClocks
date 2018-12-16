@@ -26,6 +26,10 @@ class Top() extends Component {
 
 class Sub1() extends Component {
 
+    // THIS ALSO CHANGES THE NAMES FOR THE DOMAIN ABOVE !!!
+    ClockDomain.current.clock.setName("sub_clk")
+    ClockDomain.current.reset.setName("sub_reset_")
+
     var io = new Bundle {
         var switch          = in(Bool)
         val switch_reg      = out(Bool)
