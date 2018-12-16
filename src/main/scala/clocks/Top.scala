@@ -7,11 +7,13 @@ import spinal.lib._
 class Top() extends Component {
 
     var io = new Bundle {
+        var led_red         = out(Bool)
         var led_green       = out(Bool)
         var switch          = in(Bool)
     }
 
-    io.led_green := True
+    io.led_red   := RegNext(io.switch) init(False)
+    io.led_green := RegNext(io.switch)
 }
 
 
