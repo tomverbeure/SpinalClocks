@@ -20,7 +20,14 @@ class Top() extends Component {
 object TopVerilog{
     def main(args: Array[String]) {
 
-        val config = SpinalConfig()
+        val config = SpinalConfig(
+            defaultConfigForClockDomains = ClockDomainConfig(
+                clockEdge           = RISING,
+                resetKind           = ASYNC,
+                resetActiveLevel    = LOW
+            )
+        )
+
         config.generateVerilog({
             val toplevel = new Top()
             toplevel
