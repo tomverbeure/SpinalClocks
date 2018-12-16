@@ -9,11 +9,29 @@ class Top() extends Component {
     var io = new Bundle {
         var led_red         = out(Bool)
         var led_green       = out(Bool)
+        var led_blue        = out(Bool)
         var switch          = in(Bool)
     }
 
+    ClockDomain.current.clock.setName("vo_clk")
+    ClockDomain.current.reset.setName("vo_reset_")
+
     io.led_red   := RegNext(io.switch) init(False)
     io.led_green := RegNext(io.switch)
+
+    var u_sub1 = new Sub1
+    u_sub1.io.switch        <> io.switch
+    u_sub1.io.switch_reg    <> io.led_blue
+}
+
+class Sub1() extends Component {
+
+    var io = new Bundle {
+        var switch          = in(Bool)
+        val switch_reg      = out(Bool)
+    }
+
+    io.switch_reg := RegNext(io.switch) init (False)
 }
 
 
