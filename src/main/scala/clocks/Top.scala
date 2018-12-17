@@ -6,15 +6,15 @@ import spinal.lib._
 
 class Top() extends Component {
 
-    var io = new Bundle {
-        var led_red         = out(Bool)
-        var led_green       = out(Bool)
-        var led_blue        = out(Bool)
-        var switch          = in(Bool)
+    val io = new Bundle {
+        val led_red         = out(Bool)
+        val led_green       = out(Bool)
+        val led_blue        = out(Bool)
+        val switch          = in(Bool)
     }
 
     // Create a VO clock domain with clock and reset coming straight from the toplevel
-    var voClkDomain = ClockDomain.external("vo")
+    val voClkDomain = ClockDomain.external("vo")
     voClkDomain.reset.setName("vo_reset_")
 
     // "slowed down" clock domain. The FFs are still using the same "vo_clk" clock, but 
@@ -22,11 +22,11 @@ class Top() extends Component {
     val voDiv2ClkDomain = voClkDomain.newClockDomainSlowedBy(3)
 
     // We can now use this new clock domain to drive regular logic.
-    var vo_div2_domain = new ClockingArea(voDiv2ClkDomain) {
+    val vo_div2_domain = new ClockingArea(voDiv2ClkDomain) {
 
         io.led_red   := RegNext(io.switch) init(False)
 
-        var u_sub1 = new Sub1
+        val u_sub1 = new Sub1
         u_sub1.io.switch        <> io.switch
         u_sub1.io.switch_reg    <> io.led_blue
     }
@@ -38,8 +38,8 @@ class Top() extends Component {
 
 class Sub1() extends Component {
 
-    var io = new Bundle {
-        var switch          = in(Bool)
+    val io = new Bundle {
+        val switch          = in(Bool)
         val switch_reg      = out(Bool)
     }
 
