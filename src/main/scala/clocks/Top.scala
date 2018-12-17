@@ -16,8 +16,10 @@ class Top() extends Component {
     val srcClkDomain = ClockDomain.external("src", frequency = FixedFrequency(25 MHz))
     srcClkDomain.reset.setName("src_reset_")
 
-    val destClkDomain = ClockDomain.external("dest", frequency = FixedFrequency(100 MHz))
+    val destClkDomain = ClockDomain.external("dest", frequency = FixedFrequency(25 MHz))
     destClkDomain.reset.setName("dest_reset_")
+
+    destClkDomain.setSyncronousWith(srcClkDomain)
 
     val src_domain = new ClockingArea(srcClkDomain) {
         val src_switch = RegNext(io.switch) init(False)
