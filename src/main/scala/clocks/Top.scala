@@ -13,15 +13,16 @@ class Top() extends Component {
         var switch          = in(Bool)
     }
 
-    ClockDomain.current.clock.setName("vo_clk")
-    ClockDomain.current.reset.setName("vo_reset_")
+    var voClkDomain = ClockDomain.external("vo")
 
-    io.led_red   := RegNext(io.switch) init(False)
-    io.led_green := RegNext(io.switch)
+    var vo_domain = new ClockingArea(voClkDomain) {
+        io.led_red   := RegNext(io.switch) init(False)
+        io.led_green := RegNext(io.switch)
 
-    var u_sub1 = new Sub1
-    u_sub1.io.switch        <> io.switch
-    u_sub1.io.switch_reg    <> io.led_blue
+        var u_sub1 = new Sub1
+        u_sub1.io.switch        <> io.switch
+        u_sub1.io.switch_reg    <> io.led_blue
+    }
 }
 
 class Sub1() extends Component {
