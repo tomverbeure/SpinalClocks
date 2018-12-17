@@ -1,4 +1,4 @@
-name := "VexRiscv"
+name := "Clocks"
 
 organization := "com.github.spinalhdl"
 
