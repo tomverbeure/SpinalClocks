@@ -6,33 +6,37 @@ import spinal.lib._
 
 class Top() extends Component {
 
-    var io = new Bundle {
-        var led_red         = out(Bool)
-        var led_green       = out(Bool)
-        var led_blue        = out(Bool)
-        var switch          = in(Bool)
+    val io = new Bundle {
+        val led_red         = out(Bool)
+        val led_green       = out(Bool)
+        val led_blue        = out(Bool)
+        val switch          = in(Bool)
     }
 
-    var voClkDomain = ClockDomain.external("vo")
+    val srcClkDomain = ClockDomain.external("src", frequency = FixedFrequency(25 MHz))
+    srcClkDomain.reset.setName("src_reset_")
 
-    var vo_domain = new ClockingArea(voClkDomain) {
-        io.led_red   := RegNext(io.switch) init(False)
-        io.led_green := RegNext(io.switch)
+    val destClkDomain = ClockDomain.external("dest", frequency = FixedFrequency(100 MHz))
+    destClkDomain.reset.setName("dest_reset_")
 
-        var u_sub1 = new Sub1
-        u_sub1.io.switch        <> io.switch
-        u_sub1.io.switch_reg    <> io.led_blue
-    }
-}
+    val src_domain = new ClockingArea(srcClkDomain) {
+        val src_switch = RegNext(io.switch) init(False)
 
-class Sub1() extends Component {
-
-    var io = new Bundle {
-        var switch          = in(Bool)
-        val switch_reg      = out(Bool)
+        io.led_red  := RegNext(src_switch)
     }
 
-    io.switch_reg := RegNext(io.switch) init (False)
+    val dest_domain = new ClockingArea(destClkDomain) {
+
+        val led_green = Reg(Bool)
+        val led_blue  = Reg(Bool)
+
+        led_green := src_domain.src_switch
+        led_blue  := src_domain.src_switch
+    }
+
+    io.led_green := dest_domain.led_green
+    io.led_blue  := dest_domain.led_blue
+    
 }
 
 
